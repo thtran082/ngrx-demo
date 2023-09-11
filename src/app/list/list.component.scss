@@ -1,0 +1,35 @@
+:host {
+    input {
+        padding: 5px;
+        margin-left: 20px;
+        width: 300px;
+    }
+
+    table {
+        border-collapse: collapse;
+        border: 1px solid lightgrey;
+
+        th {
+            border-bottom: 1px solid lightgrey;
+            text-align: left;
+            background-color: rgb(78, 78, 138);
+            color: white;
+            text-transform: capitalize;
+        }
+
+        th,
+        td {
+            min-width: 150px;
+            padding: 10px 20px;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(164, 164, 164, 0.1);
+        }
+    }
+
+    .loading {
+        padding: 10px 20px;
+        text-align: center;
+    }
+}

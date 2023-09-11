@@ -1,6 +1,9 @@
-import { AsyncPipe, NgFor, NgForOf, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ApiService } from '../api.service';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
+import { FormsModule, NgModel } from '@angular/forms';
+import { provideComponentStore } from '@ngrx/component-store';
+import { debounceTime } from 'rxjs';
+import { ListStore } from './list.store';
 
 @Component({
     selector: 'app-list',
@@ -12,9 +15,23 @@ import { ApiService } from '../api.service';
         NgIf,
         AsyncPipe,
         NgFor,
+        FormsModule,
+    ],
+    providers: [
+        provideComponentStore(ListStore),
     ]
 })
 export default class ListComponent {
-    private readonly api = inject(ApiService);
-    readonly list$ = this.api.getData();
+    readonly #store = inject(ListStore);
+    readonly vm$ = this.#store.vm$;
+
+    @ViewChild(NgModel) model!: any;
+
+    ngAfterViewInit() {
+        this.#store.updateSearch$(
+            this.model.valueChanges.pipe(
+                debounceTime(300),
+            ),
+        )
+    }
 }

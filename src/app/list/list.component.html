@@ -1,12 +1,36 @@
-search engine: 
+<ng-container *ngIf="vm$ | async as vm">
+    <h3>
+        <span #hehe>Search bar:</span>
+        <input
+            #input
+            type="text"
+            placeholder="search by first name"
+            [ngModel]="vm.search.firstName"
+        />
+    </h3>
 
-<table *ngIf="list$ | async as list">
-    <thead></thead>
-    <tbody>
-        <tr *ngFor="let item of list">
-            <td> {{item.id }} </td>
-            <td> {{item.first_name }} </td>
-            <td> {{item.last_name }} </td>
-        </tr>
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>number</th>
+                <th>first name</th>
+                <th>last name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="!vm.loading.list; else loadingTmpl">
+                <tr *ngFor="let item of vm.list">
+                    <td> {{item.id }} </td>
+                    <td> {{item.firstName }} </td>
+                    <td> {{item.lastName }} </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loadingTmpl>
+    <tr class="loading">
+        <td colspan="3">loading ...</td>
+    </tr>
+</ng-template>
