@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { getUsers$ } from '../store/users.selector';
-import { usersActions } from '../store/users.action';
-import { NgIf, AsyncPipe, NgFor } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule, NgModel } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { debounceTime } from 'rxjs';
+import { UsersFacade } from '../store/users.facade';
 
 @Component({
     selector: 'app-users',
@@ -17,13 +18,45 @@ import { FormsModule } from '@angular/forms';
         NgFor,
         FormsModule,
     ],
+    providers: [
+        UsersFacade,
+    ]
 })
 export default class UsersComponent {
-    readonly #store = inject(Store);
+    readonly #route = inject(ActivatedRoute);
+    readonly #router = inject(Router);
+    readonly #destroy$ = inject(DestroyRef);
+    readonly #facade = inject(UsersFacade);
 
-    users$ = this.#store.select(getUsers$);
+    @ViewChild(NgModel) model!: NgModel;
 
-    ngOnInit() {
-        this.#store.dispatch(usersActions.searchByFirstName({ firstName: '' }));
+    readonly vm$ = this.#facade.vm$;
+
+    constructor() {
+        this.#fetchRouter();
+    }
+
+    ngAfterViewInit() {
+        this.#listenSearchChange();
+    }
+
+    #fetchRouter() {
+        return this.#route.queryParams.pipe(
+            takeUntilDestroyed(this.#destroy$),
+        ).subscribe(params => {
+            this.#facade.updateSearch(params['firstName']);
+        });
+    }
+
+    #listenSearchChange() {
+        return this.model.valueChanges!.pipe(
+            debounceTime(300),
+            takeUntilDestroyed(this.#destroy$)
+        ).subscribe(firstName =>{
+            this.#router.navigate([], {
+                relativeTo: this.#route,
+                queryParams: { firstName },
+            });
+        });
     }
 }

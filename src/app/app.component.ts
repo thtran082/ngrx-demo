@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +11,4 @@ import { Store } from '@ngrx/store';
   ]
 })
 export class AppComponent {
-  readonly stor = inject(Store);
-
-  ngOnInit() {
-    console.log(this.stor);
-  }
 }

@@ -1,13 +1,13 @@
-<h1>@Ngrx/Store Demo:</h1>
+<h1>@ngrx/store Demo</h1>
 
-<ng-container *ngIf="users$ | async as users">
+<ng-container *ngIf="vm$ | async as vm">
     <h3>
         <span>Search bar:</span>
-        <!-- <input
+        <input
             type="text"
             placeholder="search by first name"
             [ngModel]="vm.search.firstName"
-        /> -->
+        />
     </h3>
 
     <table>
@@ -19,8 +19,8 @@
             </tr>
         </thead>
         <tbody>
-            <ng-container *ngIf="!false; else loadingTmpl">
-                <tr *ngFor="let item of users">
+            <ng-container *ngIf="!vm.loading.list; else loadingTmpl">
+                <tr *ngFor="let item of vm.users">
                     <td> {{item.id }} </td>
                     <td> {{item.firstName }} </td>
                     <td> {{item.lastName }} </td>

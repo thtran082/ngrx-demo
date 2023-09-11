@@ -32,7 +32,8 @@ export const reducer = createReducer(
             search: {
                 ...state.search,
                 firstName,
-            }
+            },
+            loadingState: { list: true },
         }
     }),
     on(usersApiActions.searchByFirstNameSuccess, (state, { list }) => ({

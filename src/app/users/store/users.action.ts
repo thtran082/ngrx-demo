@@ -1,4 +1,4 @@
-import { createAction, createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 import { List } from 'src/app/api.service';
 
 export const usersActions = createActionGroup({

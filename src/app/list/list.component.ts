@@ -25,11 +25,11 @@ export default class ListComponent {
     readonly #store = inject(ListStore);
     readonly vm$ = this.#store.vm$;
 
-    @ViewChild(NgModel) model!: any;
+    @ViewChild(NgModel) model!: NgModel;
 
     ngAfterViewInit() {
         this.#store.updateSearch$(
-            this.model.valueChanges.pipe(
+            this.model.valueChanges!.pipe(
                 debounceTime(300),
             ),
         )

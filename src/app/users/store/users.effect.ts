@@ -1,9 +1,8 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { ApiService } from 'src/app/api.service';
-import { usersApiActions, usersActions } from './users.action';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
-import { tapResponse } from '@ngrx/component-store';
+import { usersActions, usersApiActions } from './users.action';
 
 export const loadListEffect$ = createEffect(
     (
