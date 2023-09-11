@@ -2,12 +2,17 @@ import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { AppRoutes } from './app.routes';
+import { appRoutes } from './app.routes';
+import { provideEffects, provideStoreDevtools } from './di/store.di';
+import { provideStore } from '@ngrx/store';
 
-export const AppConfig: ApplicationConfig = {
+export const appConfig: ApplicationConfig = {
     providers: [
-        provideHttpClient(),
-        BrowserModule,
-        provideRouter(AppRoutes)
-    ]
+    provideHttpClient(),
+    BrowserModule,
+    provideRouter(appRoutes),
+    provideStore(),
+    provideStoreDevtools(),
+    provideEffects()
+]
 }
