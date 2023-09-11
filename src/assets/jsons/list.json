@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "first_name": "Giacobo",
+        "last_name": "Towey",
+        "email": "gtowey0@bbb.org",
+        "gender": "Male",
+        "ip_address": "23.135.18.83"
+    },
+    {
+        "id": 2,
+        "first_name": "Brina",
+        "last_name": "Titlow",
+        "email": "btitlow1@histats.com",
+        "gender": "Female",
+        "ip_address": "20.63.117.241"
+    },
+    {
+        "id": 3,
+        "first_name": "Duncan",
+        "last_name": "Colrein",
+        "email": "dcolrein2@addtoany.com",
+        "gender": "Male",
+        "ip_address": "98.228.203.56"
+    },
+    {
+        "id": 4,
+        "first_name": "Sher",
+        "last_name": "Cosson",
+        "email": "scosson3@altervista.org",
+        "gender": "Female",
+        "ip_address": "6.41.22.81"
+    },
+    {
+        "id": 5,
+        "first_name": "Caterina",
+        "last_name": "Brakespear",
+        "email": "cbrakespear4@uiuc.edu",
+        "gender": "Bigender",
+        "ip_address": "15.17.47.18"
+    },
+    {
+        "id": 6,
+        "first_name": "Sanson",
+        "last_name": "Disman",
+        "email": "sdisman5@cdbaby.com",
+        "gender": "Male",
+        "ip_address": "192.153.8.55"
+    },
+    {
+        "id": 7,
+        "first_name": "Susan",
+        "last_name": "Sentance",
+        "email": "ssentance6@adobe.com",
+        "gender": "Female",
+        "ip_address": "24.24.182.1"
+    },
+    {
+        "id": 8,
+        "first_name": "Cesya",
+        "last_name": "Schoolcroft",
+        "email": "cschoolcroft7@comcast.net",
+        "gender": "Female",
+        "ip_address": "233.166.247.194"
+    },
+    {
+        "id": 9,
+        "first_name": "Moss",
+        "last_name": "Evitts",
+        "email": "mevitts8@va.gov",
+        "gender": "Male",
+        "ip_address": "115.206.129.118"
+    },
+    {
+        "id": 10,
+        "first_name": "Ban",
+        "last_name": "McGreil",
+        "email": "bmcgreil9@who.int",
+        "gender": "Male",
+        "ip_address": "181.139.254.5"
+    }
+]

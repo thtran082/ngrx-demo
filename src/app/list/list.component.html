@@ -1,0 +1,12 @@
+search engine: 
+
+<table *ngIf="list$ | async as list">
+    <thead></thead>
+    <tbody>
+        <tr *ngFor="let item of list">
+            <td> {{item.id }} </td>
+            <td> {{item.first_name }} </td>
+            <td> {{item.last_name }} </td>
+        </tr>
+    </tbody>
+</table>
