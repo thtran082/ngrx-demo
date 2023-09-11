@@ -3,8 +3,8 @@ import { ApplicationConfig } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { provideEffects, provideStoreDevtools } from './di/store.di';
 import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -13,6 +13,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideStore(),
     provideStoreDevtools(),
-    provideEffects()
 ]
 }
