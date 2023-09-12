@@ -46,3 +46,8 @@ export const reducer = createReducer(
         loadingState: { list: false },
     })),
 );
+
+export const usersFeature = createFeature({
+    name: USERS_FEATURES_KEY,
+    reducer
+});

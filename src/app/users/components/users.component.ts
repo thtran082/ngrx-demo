@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild, inject } fro
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, withLatestFrom } from 'rxjs';
 import { UsersFacade } from '../store/users.facade';
 
 @Component({
@@ -42,9 +42,11 @@ export default class UsersComponent {
 
     #fetchRouter() {
         return this.#route.queryParams.pipe(
+            filter(rs => 'firstName' in rs),
+            withLatestFrom(this.#facade.search$),
             takeUntilDestroyed(this.#destroy$),
-        ).subscribe(params => {
-            this.#facade.updateSearch(params['firstName']);
+        ).subscribe(([params, oldSearchData]) => {
+            this.#facade.updateSearch(params['firstName'] || oldSearchData.firstName);
         });
     }
 

@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { pipe, switchMap, tap, withLatestFrom } from 'rxjs';
+import { distinctUntilChanged, filter, pipe, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ApiService } from '../api.service';
-import { ListState } from './list.state';
 import { AuthStore } from '../global/auth.store';
+import { ListState } from './list.state';
 
 @Injectable()
 export class ListStore extends ComponentStore<ListState> implements OnStoreInit {
@@ -28,7 +28,7 @@ export class ListStore extends ComponentStore<ListState> implements OnStoreInit 
         this.#list$,
         this.#search$,
         this.#loading$,
-        this.#authStore.visited$,
+        this.#authStore.search$,
         (list, search, loading, visited) => ({ list, search, loading, visited })
     );
 
@@ -38,17 +38,19 @@ export class ListStore extends ComponentStore<ListState> implements OnStoreInit 
 
     ngrxOnStoreInit() {
         this.fetchRouter$(this.#route.queryParams);
-        this.fetchAPI$(
-            this.#search$
-        );
+        this.fetchAPI$(this.#search$);
     }
 
     fetchRouter$ = this.effect<Params>(
         pipe(
-            withLatestFrom(this.#search$),
-            tap(([value, search]) => {
-                this.patchState({
-                    search: { ...search, firstName: value?.['firstName'] || '' }
+            filter(rs => 'firstName' in rs),
+            distinctUntilChanged((prev, curr) => curr?.['firstName'] === prev?.['firstName']),
+            withLatestFrom(this.#search$, this.#authStore.search$),
+            tap(([route, search, oldSearchData]) => {
+                if (oldSearchData.firstName && !route?.['firstName']) {
+                    this.updateSearch$(oldSearchData.firstName);
+                } else this.patchState({
+                    search: { ...search, firstName: route?.['firstName'] }
                 });
             })
         )
@@ -56,6 +58,7 @@ export class ListStore extends ComponentStore<ListState> implements OnStoreInit 
 
     fetchAPI$ = this.effect<ListState['search']>(
         pipe(
+            distinctUntilChanged((prev, curr) => curr?.['firstName'] === prev?.['firstName']),
             tap(() => { this.setListLoading(true) }),
             switchMap(({ firstName }) => this.#api.getData(firstName).pipe(
                 tapResponse(
@@ -84,8 +87,9 @@ export class ListStore extends ComponentStore<ListState> implements OnStoreInit 
         this.patchState({ loadingState: { list } });
     }
 
-    setVisited(visited: boolean) {
-        this.#authStore.patchState({ visited });
+    override ngOnDestroy(): void {
+        this.#authStore.preserveSearch$(this.#search$);
+        super.ngOnDestroy();
     }
 
 }

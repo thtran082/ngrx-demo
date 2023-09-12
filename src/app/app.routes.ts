@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 
-import * as usersEffect from './users/store/users.effect';
-import * as usersFeature from './users/store/users.reducer';
 import { provideState } from '@ngrx/store';
+import * as usersEffect from './users/store/users.effect';
+import { usersFeature } from './users/store/users.reducer';
 
 export const appRoutes: Routes = [
     {
@@ -15,10 +15,7 @@ export const appRoutes: Routes = [
         loadComponent: () => import('./users/components/users.component'),
         providers: [
             provideEffects(usersEffect),
-            provideState(
-                usersFeature.USERS_FEATURES_KEY,
-                usersFeature.reducer,
-            ),
+            provideState(usersFeature),
         ]
     }
 ];
