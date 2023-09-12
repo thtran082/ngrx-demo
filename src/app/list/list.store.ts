@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ComponentStore, OnStoreInit, tapResponse } from '@ngrx/component-store';
-import { pipe, switchMap, tap, withLatestFrom } from 'rxjs';
+import { distinctUntilChanged, pipe, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ApiService } from '../api.service';
 import { ListState } from './list.state';
 import { AuthStore } from '../global/auth.store';
@@ -39,7 +39,11 @@ export class ListStore extends ComponentStore<ListState> implements OnStoreInit 
     ngrxOnStoreInit() {
         this.fetchRouter$(this.#route.queryParams);
         this.fetchAPI$(
-            this.#search$
+            this.#search$.pipe(
+                distinctUntilChanged((prev, curr) => {
+                    return prev.firstName === curr.firstName
+                }),
+            )
         );
     }
 

@@ -1,9 +1,8 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, debounceTime, of, switchMap } from 'rxjs';
+import { Observable, debounceTime } from 'rxjs';
 import { UsersFacade } from '../store/users.facade';
 
 @Component({
@@ -33,6 +32,10 @@ export default class UsersComponent {
     readonly vm$ = this.#facade.vm$;
 
     ngAfterViewInit() {
-        this.#facade.updateSearch(this.model.valueChanges as Observable<string>);
+        this.#facade.updateSearch(
+            this.model.valueChanges!.pipe(
+                debounceTime(300),
+            ) as Observable<string>,
+        );
     }
 }

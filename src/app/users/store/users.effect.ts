@@ -1,9 +1,9 @@
-import { DestroyRef, inject } from '@angular/core';
+import { inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, debounceTime, first, isObservable, map, of, startWith, switchMap, tap } from 'rxjs';
+import { catchError, filter, finalize, map, of, switchMap, tap } from 'rxjs';
 import { ApiService } from 'src/app/api.service';
 import { usersActions, usersApiActions } from './users.action';
-import { ActivatedRoute, Router } from '@angular/router';
 
 export const fetchRouterEffect$ = createEffect(
     (
@@ -13,10 +13,14 @@ export const fetchRouterEffect$ = createEffect(
         return action$.pipe(
             ofType(usersActions.resolveRouter),
             switchMap(() => route.queryParams.pipe(
+                filter(value => {
+                    return 'firstName' in value;
+                }),
                 map(value =>
                     usersActions.searchByFirstName({ firstName: value?.['firstName'] || '' })
                 ),
             )),
+            finalize(() => console.log('done'))
         )
     },
     {
@@ -45,8 +49,7 @@ export const listenFormChange$ = createEffect(
         functional: true,
         dispatch: false,
     }
-)
-
+);
 
 export const loadListEffect$ = createEffect(
     (
