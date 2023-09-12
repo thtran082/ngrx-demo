@@ -27,6 +27,10 @@ export default class ListComponent {
 
     @ViewChild(NgModel) model!: NgModel;
 
+    ngOnDestroy() {
+        this.#store.setVisited(true);
+    }
+
     ngAfterViewInit() {
         this.#store.updateSearch$(
             this.model.valueChanges!.pipe(
