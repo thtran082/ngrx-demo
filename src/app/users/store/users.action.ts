@@ -8,7 +8,7 @@ export const usersActions = createActionGroup({
     events: {
         'Resolve Router': props<any>(),
         'Search By First Name': props<{ firstName: string }>(),
-        'Listen Value Change': props<{ model: NgModel }>(),
+        'Listen Value Change': props<{ valueChanges: Observable<string> }>(),
     }
 });
 

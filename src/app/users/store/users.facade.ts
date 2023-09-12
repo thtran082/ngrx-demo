@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { usersActions } from './users.action';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, debounce, debounceTime, distinctUntilChanged, isObservable, map, of, startWith, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as usersSelector from './users.selector';
 import { NgModel } from '@angular/forms';
@@ -32,9 +32,14 @@ export class UsersFacade {
         )
     }
 
-    updateSearch(model: NgModel) {
+    updateSearch(valueChanges: Observable<string>) {
+        const mapper = of('').pipe(
+            switchMap(() => valueChanges),
+            debounceTime(300),
+            distinctUntilChanged(),
+        )
         this.#store.dispatch(
-            usersActions.listenValueChange({ model })
+            usersActions.listenValueChange({ valueChanges: mapper })
         );
     }
 }

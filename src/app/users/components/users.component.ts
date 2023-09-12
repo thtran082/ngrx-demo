@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild, inject } fro
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, debounceTime } from 'rxjs';
+import { Observable, debounceTime, of, switchMap } from 'rxjs';
 import { UsersFacade } from '../store/users.facade';
 
 @Component({
@@ -33,19 +33,6 @@ export default class UsersComponent {
     readonly vm$ = this.#facade.vm$;
 
     ngAfterViewInit() {
-        // this.#listenSearchChange();
-        this.#facade.updateSearch(this.model);
-    }
-
-    #listenSearchChange() {
-        return this.model.valueChanges!.pipe(
-            debounceTime(300),
-            takeUntilDestroyed(this.#destroy$)
-        ).subscribe(firstName =>{
-            this.#router.navigate([], {
-                relativeTo: this.#route,
-                queryParams: { firstName },
-            });
-        });
+        this.#facade.updateSearch(this.model.valueChanges as Observable<string>);
     }
 }
