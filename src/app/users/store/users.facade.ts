@@ -1,16 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { usersActions } from './users.action';
-import { combineLatest } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as usersAction from './users.selector';
+import * as usersSelector from './users.selector';
+import { NgModel } from '@angular/forms';
 
 @Injectable()
 export class UsersFacade {
     readonly #store = inject(Store);
 
-    readonly #users$ = this.#store.select(usersAction.selectUser);
-    readonly #loadingState$ = this.#store.select(usersAction.selectLoadingState);
-    readonly #search$ = this.#store.select(usersAction.selectSearch);
+    readonly #users$ = this.#store.select(usersSelector.selectUser);
+    readonly #loadingState$ = this.#store.select(usersSelector.selectLoadingState);
+    readonly #search$ = this.#store.select(usersSelector.selectSearch);
 
     readonly vm$ = combineLatest(
         [
@@ -21,9 +22,19 @@ export class UsersFacade {
         (users, loading, search) => ({ users, loading, search }),
     );
 
-    updateSearch(value: string) {
+    constructor() {
+        this.fetchRouter();
+    }
+
+    fetchRouter() {
         this.#store.dispatch(
-            usersActions.searchByFirstName({ firstName: value || '' })
+            usersActions.resolveRouter(),
+        )
+    }
+
+    updateSearch(model: NgModel) {
+        this.#store.dispatch(
+            usersActions.listenValueChange({ model })
         );
     }
 }
